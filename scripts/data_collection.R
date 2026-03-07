@@ -7,8 +7,11 @@
   library(jsonlite)
   library(tidyverse)
   library(here)
+  library(rvest)
 
-# fetch data from the internal API
+## fetch data from the internal API ##
+
+  # make a GET request to the API endpoint
   http_response <- request("https://icsid.worldbank.org/api/all/cases") |>
     req_perform()
   
@@ -25,7 +28,67 @@
     fromJSON(simplifyVector = FALSE) |>
     {\(x) x$data$GetAllCasesResult}()
   
-# create vector with all case names
+## create vector with all case names ##
+  
+# example of how to access the case number of the first case in the list  
+  cases_list[[1]]$caseno
+  
+  case_nos <- character(length(cases_list))  # empty vector, same length as cases_list
 
+# loop through the cases_list and extract the case numbers
+  for (i in seq_along(cases_list)) {
+    case_nos[i] <- cases_list[[i]]$caseno
+  }
+  
+## preparation of web scraping case details ##
+
+# defining the base url
+base_url <- "https://icsid.worldbank.org/cases/case-database/case-detail?CaseNo="
+  
+
+# defining a function to scrape case details
+  scrape_detail <- function(case_no) {
+    Sys.sleep(2)  # wait 2 seconds after every request to avoid overwhelming the server
+    
+    url  <- paste0(base_url,case_no) # construct the url for the case details page using the case number
+    page <- read_html(url) # read the HTML content of the case details page
+    
+    rows <- page |> html_elements("li.row") # extract the list items with class "row" which contain the case details
+    
+    # creating a sub-function that extracts the important information
+    # the information on the website is stored in a table
+    get_field <- function(label_text) {
+      for (row in rows) {
+        label <- row |>
+          html_element("[class*='leftcol'] label") |> # extract the label element from the left column of the table
+          html_text(trim = TRUE) # extract the text from the label element and trim any whitespace
+        
+        # if the extracted label matches the one we are looking for,
+        # extract the corresponding value from the right column of the table
+        if (!is.na(label) && label == label_text) {
+          return(
+            row |>
+              html_element("[class*='rightcol']") |>
+              html_text(trim = TRUE)
+          )
+        }
+      }
+      NA_character_
+    }
+    
+    tibble(
+      case_no         = case_no,
+      economic_sector = get_field("Economic Sector:"),
+      subject         = get_field("Subject of Dispute:"),
+      instrument      = get_field("Instrument(s) Invoked:"),
+      rules_applied   = get_field("Applicable Rules:")
+    )
+  }
+
+  # example of how to use the function to scrape details for the first case
+  scrape_detail(case_nos[1])
+  
+  # run the function for all case numbers and combine the results into a single data frame
+  case_details <- map_dfr(case_nos, scrape_detail, .progress = TRUE)
 
   
