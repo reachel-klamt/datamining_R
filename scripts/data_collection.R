@@ -48,10 +48,30 @@ base_url <- "https://icsid.worldbank.org/cases/case-database/case-detail?CaseNo=
 
 # defining a function to scrape case details
   scrape_detail <- function(case_no) {
-    Sys.sleep(2)  # wait 2 seconds after every request to avoid overwhelming the server
+    Sys.sleep(0.2)  # wait 0.2 seconds after every request to avoid overwhelming the server
     
     url  <- paste0(base_url,case_no) # construct the url for the case details page using the case number
-    page <- read_html(url) # read the HTML content of the case details page
+    
+    # tryCatch catches the error before it crashes the loop
+    page <- tryCatch(
+      read_html(url),
+      error = function(e) {
+        message("Failed: ", case_no, " — ", e$message)
+        return(NULL)
+      }
+    )
+    
+    # if the page failed, return an empty row for this case
+    if (is.null(page)) {
+      return(tibble(
+        case_no         = case_no,
+        economic_sector = NA_character_,
+        subject         = NA_character_,
+        instrument      = NA_character_,
+        rules_applied   = NA_character_,
+        outcome         = NA_character_
+      ))
+    }
     
     rows <- page |> html_elements("li.row") # extract the list items with class "row" which contain the case details
     
@@ -90,5 +110,8 @@ base_url <- "https://icsid.worldbank.org/cases/case-database/case-detail?CaseNo=
   
   # run the function for all case numbers and combine the results into a single data frame
   case_details <- map_dfr(case_nos, scrape_detail, .progress = TRUE)
+  
+# save the case details as a R Data
+  saveRDS(case_details, here("data_raw", "icsid_details.rds"))
 
   
