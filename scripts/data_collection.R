@@ -69,7 +69,9 @@ base_url <- "https://icsid.worldbank.org/cases/case-database/case-detail?CaseNo=
         subject         = NA_character_,
         instrument      = NA_character_,
         rules_applied   = NA_character_,
-        outcome         = NA_character_
+        outcome         = NA_character_,
+        claimant        = NA_character_
+        
       ))
     }
     
@@ -101,14 +103,15 @@ base_url <- "https://icsid.worldbank.org/cases/case-database/case-detail?CaseNo=
       economic_sector = get_field("Economic Sector:"),
       subject         = get_field("Subject of Dispute:"),
       instrument      = get_field("Instrument(s) Invoked:"),
-      rules_applied   = get_field("Applicable Rules:")
+      rules_applied   = get_field("Applicable Rules:"),
+      claimant_nationality = get_field("Claimant(s)/Nationality(ies):")
     )
   }
 
   # example of how to use the function to scrape details for the first case
   scrape_detail(case_nos[1])
   
-  # run the function for all case numbers and combine the results into a single data frame
+  # running the function for all case numbers and combine the results into a single data frame
   case_details <- map_dfr(case_nos, scrape_detail, .progress = TRUE)
   
 # save the case details as a R Data
