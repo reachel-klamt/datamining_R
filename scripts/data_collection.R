@@ -69,8 +69,7 @@ base_url <- "https://icsid.worldbank.org/cases/case-database/case-detail?CaseNo=
         subject         = NA_character_,
         instrument      = NA_character_,
         rules_applied   = NA_character_,
-        outcome         = NA_character_,
-        claimant        = NA_character_
+        claimant_nationality = NA_character_
         
       ))
     }
