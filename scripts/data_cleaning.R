@@ -4,6 +4,8 @@
 library(jsonlite)
 library(tidyverse)
 library(here)
+library(countrycode)
+library(wbstats)
 
 ## Loading the two datasets
   cases_list <- fromJSON(here("data_raw", "icsid_raw.json"), simplifyVector = FALSE)$data$GetAllCasesResult
@@ -136,6 +138,27 @@ library(here)
         str_detect(claimant_nationality, "Kittitian/Nevisian") ~ "KNA",
         TRUE                                            ~ NA_character_
       ))
+    
+    
+    # replace ANT with NLD for Netherlands Antilles, which is not a country but a former territory of the Netherlands
+    icsid_df <- icsid_df |>
+      mutate(
+        iso3_claimant = case_when(
+          iso3_claimant == "ANT" ~ "NLD",
+          TRUE ~ iso3_claimant
+        ))
+    
+## add information on income category from Worldbank (via wbstat API)
+    # Load World Bank income category data
+    income_df <- wb_countries() |>
+      select(iso3c, income_level)
+    
+    # add the columns to the df
+    icsid_df <- icsid_df |>
+      left_join(income_df |> rename(income_claimant  = income_level),
+                by = c("iso3_claimant"  = "iso3c")) |>
+      left_join(income_df |> rename(income_respondent = income_level),
+                by = c("iso3_respondent" = "iso3c"))
     
     
   # save the df
