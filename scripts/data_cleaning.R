@@ -160,6 +160,21 @@ library(wbstats)
       left_join(income_df |> rename(income_respondent = income_level),
                 by = c("iso3_respondent" = "iso3c"))
     
+    # WB Region and UN Subregion for claimant and respondent
+    icsid_df <- icsid_df |>
+      mutate(
+        # World Bank Region
+        region_claimant        = countrycode(iso3_claimant,   "iso3c", "region",
+                                             custom_match = c("XKX" = "Europe & Central Asia")),
+        region_respondent      = countrycode(iso3_respondent, "iso3c", "region",
+                                             custom_match = c("XKX" = "Europe & Central Asia")),
+        # UN Subregion
+        unsubregion_claimant   = countrycode(iso3_claimant,   "iso3c", "un.regionsub.name",
+                                             custom_match = c("XKX" = "Southern Europe")),
+        unsubregion_respondent = countrycode(iso3_respondent, "iso3c", "un.regionsub.name",
+                                             custom_match = c("XKX" = "Southern Europe"))
+      )
+    
     
   # save the df
   saveRDS(icsid_df, here("data_preprocessed", "icsid.rds"))
