@@ -105,7 +105,7 @@ library(lubridate)
     theme_void(base_size = 11) +
     theme(plot.title = element_text(face = "bold", hjust = 0.5))
   
-  p_claimant / p_respondent +
+  p_cases_map <- p_claimant / p_respondent +
     plot_annotation(
       title   = "ICSID Cases by Country",
       caption = "Source: ICSID"
@@ -214,6 +214,12 @@ library(lubridate)
   ggsave(here("figures", "sector.png"), p_sector, width = 10, height = 6, dpi = 300)
   
   ##### Plot: Correlation Sector Group and Income ####
+  icsid_clean <- icsid_clean |>
+    mutate(sector_group = factor(sector_group, levels = c(
+      "Resource & Infrastructure Extraction",
+      "Other"
+    )))
+  
   # Heatmap for each sector group
   p_sector_heatmap <- icsid_clean |>
     filter(!is.na(sector_group)) |>
@@ -243,26 +249,25 @@ library(lubridate)
   ggsave(here("figures", "heatmap_sector_group.png"), p_sector_heatmap, width = 12, height = 6, dpi = 300)
   
   ##### Statistics: correlation between claimant and respondent sector group ######
-  # creating contingency table
-  sector_table <- icsid_clean |>
-    filter(
-      !is.na(sector_group),
-    ) |>
-    # create df with count of cases for each combination of sector group and respondent income group
+  # creating contingency table — filtered to extractive sector only
+  # testing whether within extractive sectors, high-income claimants disproportionately sue lower-income respondents
+  extractive_table <- icsid_clean |>
+    filter(sector_group == "Resource & Infrastructure Extraction") |>
+    # create df with count of cases for each combination of claimant and respondent income group
     # chi-squared not possible with 3x3 contingency table
-    # for thesis significant association between sector group and respondent income group is more relevant than claimant income group
-    count(sector_group, income_respondent) |>
+    # for thesis significant association between claimant and respondent income group within extractive sectors
+    count(income_claimant, income_respondent) |>
     pivot_wider(names_from = income_respondent, values_from = n, values_fill = 0) |>
-    column_to_rownames("sector_group")
+    column_to_rownames("income_claimant")
   
-  print("Contingency table — sector group vs respondent income group:")
-  print(sector_table)
+  print("Contingency table — extractive sector: claimant vs respondent income group:")
+  print(extractive_table)
   
-  # Run chi-squared test to check for independence between sector group and respondent income group
-  chi_sector <- chisq.test(sector_table)
-  print(chi_sector)
-  # standardized residuals to identify which combinations of sector group and respondent income group contribute most to the chi-squared statistic
-  print(chi_sector$stdres)
+  # Run chi-squared test to check for independence between claimant and respondent income group within extractive sectors
+  chi_extractive <- chisq.test(extractive_table)
+  print(chi_extractive)
+  # standardized residuals to identify which combinations of claimant and respondent income group contribute most to the chi-squared statistic
+  print(chi_extractive$stdres)
 
   
   
