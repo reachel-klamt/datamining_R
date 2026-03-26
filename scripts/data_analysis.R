@@ -148,32 +148,7 @@ library(lubridate)
   ggsave(here("figures", "map_income.png"), p_income_map, width = 14, height = 7, dpi = 300)
   
   
-  ##### Plot: Heatmap of claimant vs respondent income group #####
-  p_heatmap <- icsid_clean |>
-    # creates an internal data frame with the count of cases for each combination and orders them according to the predefined order of income groups
-    count(income_claimant, income_respondent) |>
-    # creating the plot
-    ggplot(aes(x = income_respondent, y = income_claimant, fill = n)) +
-    geom_tile(colour = "white") +
-    geom_text(aes(label = n), size = 3.5) +
-    scale_fill_gradient(low = "white", high = "#BD0026", name = "Cases") +
-    labs(
-      title   = "ICSID Cases: Claimant vs Respondent Income Group",
-      x       = "Respondent Income Group",
-      y       = "Claimant Income Group",
-      caption = "Source: ICSID"
-    ) +
-    theme_minimal(base_size = 11) +
-    theme(
-      axis.text.x = element_text(angle = 25, hjust = 1),
-      plot.title  = element_text(face = "bold"),
-      plot.background = element_rect(fill = "white", colour = NA)
-    )
-  
-  ggsave(here("figures", "heatmap_income.png"), p_heatmap, width = 10, height = 7, dpi = 300)
-  
-
-  ##### Statistics: correlation between claimant and respondent income group ######
+  ##### Correlation between claimant and respondent income group ######
   # creating contingency table for chi-squared test
   income_table <- icsid_clean |>
     count(income_claimant, income_respondent) |>
@@ -186,13 +161,58 @@ library(lubridate)
   # conducting chi-squared test to check for independence between claimant and respondent income groups
   chi_test <- chisq.test(income_table)
   print(chi_test)
+  print(chi_test$stdres)
   
-  ##### Plot: Sector #####
-  p_sector <- icsid_clean |>
-    # filter out missings
-    filter(
-      !is.na(economic_sector)
+  # extracting standardised residuals for use in heatmap
+  stdres_income <- as.data.frame(chi_test$stdres) |>
+    rownames_to_column("income_claimant") |>
+    pivot_longer(
+      -income_claimant,
+      names_to  = "income_respondent",
+      values_to = "stdres"
+    )
+  
+  # Plot: Heatmap of claimant vs respondent income group
+  p_heatmap <- icsid_clean |>
+    count(income_claimant, income_respondent) |>
+    left_join(stdres_income, by = c("income_claimant", "income_respondent")) |>
+    mutate(
+      significant       = abs(stdres) > 2,
+      income_claimant   = factor(income_claimant,  levels = income_order),
+      income_respondent = factor(income_respondent, levels = income_order)
     ) |>
+    ggplot(aes(x = income_respondent, y = income_claimant)) +
+    geom_tile(aes(fill = stdres), colour = "white") +
+    geom_text(aes(
+      label    = paste0(n, "\n(", round(stdres, 1), ")"),
+      fontface = ifelse(significant, "bold", "plain")
+    ), size = 3) +
+    scale_fill_gradient2(
+      low      = "#313695",
+      mid      = "white",
+      high     = "#BD0026",
+      midpoint = 0,
+      name     = "Standardised\nResidual"
+    ) +
+    labs(
+      title   = "ICSID Cases: Claimant vs Respondent Income Group",
+      x       = "Respondent Income Group",
+      y       = "Claimant Income Group",
+      caption = "Source: ICSID. Bold = statistically significant (|residual| > 2)"
+    ) +
+    theme_minimal(base_size = 11) +
+    theme(
+      axis.text.x     = element_text(angle = 25, hjust = 1),
+      plot.title      = element_text(face = "bold"),
+      plot.background = element_rect(fill = "white", colour = NA)
+    )
+
+  ggsave(here("figures", "heatmap_income.png"), p_heatmap, width = 10, height = 6, dpi = 300)
+  
+  
+  ##### Plot: Sectors #####
+  p_sector <- icsid_df |>
+    filter(!is.na(economic_sector)) |>
     count(economic_sector, sort = TRUE) |>
     ggplot(aes(x = n, y = reorder(economic_sector, n), fill = n)) +
     geom_col() +
@@ -213,44 +233,13 @@ library(lubridate)
   
   ggsave(here("figures", "sector.png"), p_sector, width = 10, height = 6, dpi = 300)
   
-  ##### Plot: Correlation Sector Group and Income ####
-  icsid_clean <- icsid_clean |>
-    mutate(sector_group = factor(sector_group, levels = c(
-      "Resource & Infrastructure Extraction",
-      "Other"
-    )))
   
-  # Heatmap for each sector group
-  p_sector_heatmap <- icsid_clean |>
-    filter(!is.na(sector_group)) |>
-    # create df with count of cases for each combination of claimant income group, respondent income group and sector group
-    count(income_claimant, income_respondent, sector_group) |>
-    # creating the plot
-    ggplot(aes(x = income_respondent, y = income_claimant, fill = n)) +
-    geom_tile(colour = "white") +
-    geom_text(aes(label = n), size = 3.5) +
-    scale_fill_gradient(low = "white", high = "#BD0026", name = "Cases") +
-    # creating separate heatmap for each sector group
-    facet_wrap(~ sector_group) +
-    labs(
-      title   = "ICSID Cases by Income Group and Sector Group",
-      x       = "Respondent Income Group",
-      y       = "Claimant Income Group",
-      caption = "Source: ICSID"
-    ) +
-    theme_minimal(base_size = 11) +
-    theme(
-      axis.text.x     = element_text(angle = 25, hjust = 1),
-      plot.title      = element_text(face = "bold"),
-      plot.background = element_rect(fill = "white", colour = NA),
-      strip.text      = element_text(face = "bold")
-    )
   
-  ggsave(here("figures", "heatmap_sector_group.png"), p_sector_heatmap, width = 12, height = 6, dpi = 300)
   
-  ##### Statistics: correlation between claimant and respondent sector group ######
+  ##### correlation between claimant and respondent sector group ######
   # creating contingency table — filtered to extractive sector only
   # testing whether within extractive sectors, high-income claimants disproportionately sue lower-income respondents
+  
   extractive_table <- icsid_clean |>
     filter(sector_group == "Resource & Infrastructure Extraction") |>
     # create df with count of cases for each combination of claimant and respondent income group
@@ -268,8 +257,53 @@ library(lubridate)
   print(chi_extractive)
   # standardized residuals to identify which combinations of claimant and respondent income group contribute most to the chi-squared statistic
   print(chi_extractive$stdres)
-
   
+  # extracting standardised residuals for use in heatmap
+  stdres_extractive <- as.data.frame(chi_extractive$stdres) |>
+    rownames_to_column("income_claimant") |>
+    pivot_longer(
+      -income_claimant,
+      names_to  = "income_respondent",
+      values_to = "stdres"
+    )
+  
+  # Heatmap for extractive sector group
+  p_sector_heatmap <- icsid_clean |>
+    filter(sector_group == "Resource & Infrastructure Extraction") |>
+    count(income_claimant, income_respondent) |>
+    left_join(stdres_extractive, by = c("income_claimant", "income_respondent")) |>
+    mutate(
+      significant       = abs(stdres) > 2,
+      income_claimant   = factor(income_claimant,  levels = income_order),
+      income_respondent = factor(income_respondent, levels = income_order)
+    ) |>
+    ggplot(aes(x = income_respondent, y = income_claimant)) +
+    geom_tile(aes(fill = stdres), colour = "white") +
+    geom_text(aes(
+      label    = paste0(n, "\n(", round(stdres, 1), ")"),
+      fontface = ifelse(significant, "bold", "plain")
+    ), size = 3) +
+    scale_fill_gradient2(
+      low      = "#313695",
+      mid      = "white",
+      high     = "#BD0026",
+      midpoint = 0,
+      name     = "Standardised\nResidual"
+    ) +
+    labs(
+      title   = "ICSID Cases in Extractive Sectors by Income Group",
+      x       = "Respondent Income Group",
+      y       = "Claimant Income Group",
+      caption = "Source: ICSID. Bold = statistically significant (|residual| > 2)"
+    ) +
+    theme_minimal(base_size = 11) +
+    theme(
+      axis.text.x     = element_text(angle = 25, hjust = 1),
+      plot.title      = element_text(face = "bold"),
+      plot.background = element_rect(fill = "white", colour = NA)
+    )
+  
+  ggsave(here("figures", "heatmap_sector_group.png"), p_sector_heatmap, width = 10, height = 7, dpi = 300)
   
   ##### Plot: Time Trend #####
   # filtering like always but only until 2025 to avoid outliers in the future years
