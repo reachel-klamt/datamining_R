@@ -1,7 +1,21 @@
 ---
-title: "Report"
-format: pdf
-editor: visual
+title: "Webscraping Project"
+author: "Reachel Klamt"
+date: "27.03.2026"
+date-format: "DD.MM.YYYY"
+supervisor: "Dr. Andrea de Angelis"
+course: "Webscraping with R (FS 26)"
+
+format:
+  pdf:
+    pdf-engine: lualatex
+    template: template_full.tex
+    keep-tex: true
+    toc: true
+    fig-width: 6.3
+
+bibliography: references.bib
+csl: apsa.csl
 ---
 
 ```{r}
@@ -9,17 +23,17 @@ editor: visual
 source(here::here("scripts", "data_analysis.R"))
 ```
 
-## Introduction
+# Introduction
 
 In this paper I argue that Investor-State Dispute Settlements are an institution which further deepens the asymmetric power dynamics inherent in the international economic order. These ISDS allow investors (mostly private companies) to sue states for alleged violations of investment agreements. On the one hand this is clearly a threat to local autonomy and democratic self-determination, because it gives companies the power to go against any policies that would potentially decrease their profit. There have been various cases where companies sued for their lost profit because these states implemented "green policies" demanded by its citizens. While this in itself is deeply problematic, the focus of this paper is on how ISDS could potentially hinder the development of developing countries by reinforcing existing global economic hierarchies.
 
-This paper builds upon dependency theory as its theoretical framework. The essence of the dependency theory is that the foreign capital that comes from developed capitalist centers, mainly western states, creates an imbalance between them and their periphery (developing states) as well as between the peripheral societies. The profits that are produced in the periphery are appropriated by the capitalist center. This renders the creation of an independent economy in the developing states a hard task, while the developed regions can further consolidate their economic dominance (Frank 1967; Gosh 2019; Tausch 2010). In his study, Tausch (2010) finds that in the long term, higher multinational capital penetration leads to greater inequality and lower performance on standard indicators of development as well as lower predicted economic growth. These findings provide some empirical evidence for the dependency theory.
+This paper builds upon dependency theory as its theoretical framework. The essence of the dependency theory is that the foreign capital that comes from developed capitalist centers, mainly western states, creates an imbalance between them and their periphery (developing states) as well as between the peripheral societies. The profits that are produced in the periphery are appropriated by the capitalist center. This renders the creation of an independent economy in the developing states a hard task, while the developed regions can further consolidate their economic dominance ( @frank1967; @ghosh2019; @tausch2010). In his study, @tausch2010 finds that in the long term, higher multinational capital penetration leads to greater inequality and lower performance on standard indicators of development as well as lower predicted economic growth. These findings provide some empirical evidence for the dependency theory.
 
 If dependency theory holds, we would expect ISDS to be used disproportionately by investors from high-income states against developing country respondents. This paper tests this hypothesis empirically using data from the International Center for Settlement of Investment Disputes (ICSID), the world's leading institution for investor-state arbitration.
 
-## Method
+# Method
 
-### Data Collection
+## Data Collection
 
 In order to collect the different ISDS cases, I combined a API request with a web scraping approach.
 
@@ -65,7 +79,7 @@ case_details <- map_dfr(case_nos, scrape_detail, .progress = TRUE)
 
 the `map_dfr` directly puts the row from each case ID directly into a data frame, so that I don't end up with hundreds of single tibbles that each only contains one row. With that the data collection process is already completed.
 
-### Data Cleaning
+## Data Cleaning
 
 The first step of the data cleaning was to make one dataset out of these two raw data collections. To do so, I basically had to extract the information from the JSON file and combine it with the data frame from the web scraping. I did so by creating a function:
 
@@ -128,11 +142,11 @@ The `wbstats` package directly uses the World Banks API, so using this package i
 
 First, a additional data frame, that contained the iso3c and the income classification from the world bank was created, using the `wbstats` package. By matching the `iso3_claimant` and `iso3_respondent` variables in my ICSID dataset against the ISO3 codes in the World Bank income data frame looking up the corresponding income group, the two new variables were created.
 
-## Analysis and Results
+# Analysis
 
-After having collected all the necessary data and having compiled them into a clean data frame, I was able to analyze it.
+# Results
 
-### Claimant vs. Respondent Countries
+## Claimant vs. Respondent Countries
 
 I started the analysis by plotting the number of how many cases each country was involved in an ICSID case as a claimant and as a respondent. In @fig-map. The North-South divide is clearly visible, with European countries and the US clearly being more involved in this disputes as claimants and developing countries, especially in Latin America displaying a much larger number in the respondent position.
 
@@ -165,7 +179,7 @@ While these findings suggest that in general, high-income claimants don't dispro
 
 In a second step I therefor classify the different sectors into extractive sectors and non-extractive sectors with the first containing sectors such as oil, water, agriculture and forestry because these sectors are characterised by the exploitation of natural resources that are geographically fixed making them particularly prone to disputes between foreign investors and host states. The latter group contains disputes regarding the financial sector, information and communication sector and the energy sector.
 
-@fig-heatmap-sector shows that in extracive sectors, high income claimants disproportionally sue upper middle income countries.
+@fig-heatmap-sector shows that in extracive sectors, high income claimants disproportionately sue upper middle income countries.
 
 ```{r}
 #| label: fig-heatmap-sector
@@ -178,3 +192,7 @@ p_sector_heatmap
 ```
 
 Again it is necessary to not only look at the distribution but for the statistical findings as well. In the extractive sector we find partial supports the argument that ICSID cases are a tool used by wealthy nations to protect the interests of their investors in resource-rich emerging economies. However, the effect is concentrated against upper-middle-income states not the poorest countries. ave historically pursued nationalisations or regulatory interventions in the extractive sector. This suggests that investment arbitration in the extractive sector functions less as a mechanism of exploitation in the classical sense, and more as a tool for wealthy investors to challenge state sovereignty over natural resources.
+
+\newpage
+
+# References

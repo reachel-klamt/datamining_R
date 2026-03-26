@@ -93,7 +93,7 @@ library(lubridate)
   p_claimant <- ggplot(world) +
     geom_sf(aes(fill = n_claimant), colour = "white", linewidth = 0.1) +
     scale_fill_gradient(low = "#FFF5F0", high = "#BD0026", na.value = "grey90", name = "Cases") +
-    labs(title = "Claimant — Country") +
+    labs(title = "Claimant Country") +
     theme_void(base_size = 11) +
     theme(plot.title = element_text(face = "bold", hjust = 0.5))
   
@@ -101,14 +101,17 @@ library(lubridate)
   p_respondent <- ggplot(world) +
     geom_sf(aes(fill = n_respondent), colour = "white", linewidth = 0.1) +
     scale_fill_gradient(low = "#F7FBFF", high = "#084594", na.value = "grey90", name = "Cases") +
-    labs(title = "Respondent — Country") +
+    labs(title = "Respondent Country") +
     theme_void(base_size = 11) +
     theme(plot.title = element_text(face = "bold", hjust = 0.5))
   
   p_cases_map <- p_claimant / p_respondent +
     plot_annotation(
-      title   = "ICSID Cases by Country",
-      caption = "Source: ICSID"
+      caption = "Source: ICSID",
+      theme   = theme(
+        plot.caption = element_text(hjust = 1, margin = margin(t = 10), face = "italic"),
+        plot.caption.position = "plot"
+      )
     )
   
   ggsave(here("figures", "maps_country.png"), width = 14, height = 10, dpi = 300)
@@ -195,7 +198,6 @@ library(lubridate)
       name     = "Standardised\nResidual"
     ) +
     labs(
-      title   = "ICSID Cases: Claimant vs Respondent Income Group",
       x       = "Respondent Income Group",
       y       = "Claimant Income Group",
       caption = "Source: ICSID. Bold = statistically significant (|residual| > 2)"
@@ -203,8 +205,9 @@ library(lubridate)
     theme_minimal(base_size = 11) +
     theme(
       axis.text.x     = element_text(angle = 25, hjust = 1),
-      plot.title      = element_text(face = "bold"),
-      plot.background = element_rect(fill = "white", colour = NA)
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.caption = element_text(hjust = 1, margin = margin(t = 10), face = "italic"),
+      plot.caption.position = "plot"
     )
 
   ggsave(here("figures", "heatmap_income.png"), p_heatmap, width = 10, height = 6, dpi = 300)
@@ -219,7 +222,6 @@ library(lubridate)
     geom_text(aes(label = n), hjust = -0.2, size = 3.5) +
     scale_fill_gradient(low = "#FFF5F0", high = "#BD0026", guide = "none") +
     labs(
-      title    = "Sectors Disputed",
       subtitle = "Number of ICSID cases by economic sector",
       x        = "Number of Cases",
       y        = NULL,
@@ -227,8 +229,9 @@ library(lubridate)
     ) +
     theme_minimal(base_size = 11) +
     theme(
-      plot.title      = element_text(face = "bold"),
-      plot.background = element_rect(fill = "white", colour = NA)
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.caption = element_text(hjust = 1, margin = margin(t = 10), face = "italic"),
+      plot.caption.position = "plot"
     )
   
   ggsave(here("figures", "sector.png"), p_sector, width = 10, height = 6, dpi = 300)
@@ -291,7 +294,6 @@ library(lubridate)
       name     = "Standardised\nResidual"
     ) +
     labs(
-      title   = "ICSID Cases in Extractive Sectors by Income Group",
       x       = "Respondent Income Group",
       y       = "Claimant Income Group",
       caption = "Source: ICSID. Bold = statistically significant (|residual| > 2)"
@@ -299,8 +301,9 @@ library(lubridate)
     theme_minimal(base_size = 11) +
     theme(
       axis.text.x     = element_text(angle = 25, hjust = 1),
-      plot.title      = element_text(face = "bold"),
-      plot.background = element_rect(fill = "white", colour = NA)
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.caption = element_text(hjust = 1, margin = margin(t = 10), face = "italic"),
+      plot.caption.position = "plot"
     )
   
   ggsave(here("figures", "heatmap_sector_group.png"), p_sector_heatmap, width = 10, height = 7, dpi = 300)
@@ -357,17 +360,16 @@ library(lubridate)
     # setting x-axis numbering
     scale_x_continuous(breaks = seq(1970, 2025, by = 5)) +
     labs(
-      title    = "ICSID Cases Over Time by Dispute Pattern",
-      subtitle = "Smoothed trend lines with raw data in background",
       x        = "Year",
       y        = "Number of Cases",
       caption  = "Source: ICSID"
     ) +
     theme_minimal(base_size = 11) +
     theme(
-      plot.title      = element_text(face = "bold"),
       plot.background = element_rect(fill = "white", colour = NA),
-      legend.position = "bottom"
+      legend.position = "bottom",
+      plot.caption = element_text(hjust = 1, margin = margin(t = 10), face = "italic"),
+      plot.caption.position = "plot"
     )
   
   ggsave(here("figures", "trend_pattern.png"), p_trend_pattern, width = 12, height = 6, dpi = 300)
