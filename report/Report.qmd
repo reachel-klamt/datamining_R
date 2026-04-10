@@ -18,8 +18,7 @@ bibliography: references.bib
 csl: apsa.csl
 
 abstract: |
-  This paper examines whether Investor-State Dispute Settlements (ISDS) 
-  reproduce the asymmetric power dynamics described by dependency theory in a neoliberal   system, where multinational corporations are the primary actors extracting value from developing economies rather than states themselves. By using data that I webscaped from the International Centre for Settlement of Investment Disputes the paper tests whether ICSID arbitration is disproportionately used by investors from high-income states against developing country respondents. The results show that the overall use of the ICSID cases do not confirm the theory, since the statistically ... are cases where the claimant is an investor from a country within the same income group as the respondent. However, when only looking a extractive sectors, high-income claimants disproportionately sue upper-middle-income respondents, providing partial support for the dependency theory hypothesis.
+  This paper examines whether Investor-State Dispute Settlements (ISDS) reproduce the asymmetric power dynamics described by dependency theory. The dependency theory claims that in a capitalist and more specifally, a neoliberal system, multinational corporations are the primary actors extracting value from developing economies to earn profit. By using data that I webscaped from the International Centre for Settlement of Investment Disputes this paper tests whether ICSID arbitration is disproportionately used by investors from high-income states against developing country respondents. The results show that the overall use of the ICSID cases do not confirm the theory. However, when only looking at extractive sectors, high-income claimants disproportionately sue upper-middle-income respondents. This provides partial support for the dependency theory hypothesis.
 ---
 
 ```{r}
@@ -31,9 +30,9 @@ source(here::here("scripts", "data_analysis.R"))
 
 In this paper I argue that Investor-State Dispute Settlements are an institution which further deepens the asymmetric power dynamics inherent in the international economic order. These ISDS allow investors (mostly private companies) to sue states for alleged violations of investment agreements. On the one hand this is clearly a threat to local autonomy and democratic self-determination, because it gives companies the power to go against any policies that would potentially decrease their profit. There have been various cases where companies sued for their lost profit because these states implemented "green policies" demanded by its citizens. While this in itself is deeply problematic, the focus of this paper is on how ISDS's could potentially hinder the development of developing countries by reinforcing existing global economic hierarchies.
 
-This paper builds upon dependency theory as its theoretical framework. The essence of the dependency theory is that the foreign capital that comes from developed capitalist centers, mainly western states, creates an imbalance between them and their periphery (developing states) as well as between the peripheral societies. The profits that are produced in the periphery are appropriated by the capitalist center. This renders the creation of an independent economy in the developing states a hard task, while the developed regions can further consolidate their economic dominance [@frank1967; @ghosh2019; @tausch2010]. In his study, @tausch2010 finds that in the long term, higher multinational capital penetration leads to greater inequality and lower performance on standard indicators of development as well as lower predicted economic growth. These findings provide some empirical evidence for the dependency theory. By linking the idea of the dependency theory to more recent works on neoliberalism such as @harvey2019 and @slobodian2018 , I argue that these extractive powers no longer come from these economically stronger western states but are increasingly exercised by from companies that exist within these developed countries. ISDS serve as the institutional infrastructure through which these corporations can enforce their economic interests against sovereign states
+This paper builds upon dependency theory as its theoretical framework. The idea of the dependency theory is that the foreign capital that comes from developed capitalist centers, mainly western states, creates an imbalance between them and their periphery (developing states). The profits that are produced in the periphery are appropriated by the capitalist center. This makes the creation of an independent economy in the developing states a hard task, while the developed regions can further strengthen their economic dominance [@frank1967; @ghosh2019; @tausch2010]. In his study, @tausch2010 finds that in the long term, higher multinational capital penetration leads to greater inequality and lower performance on standard indicators of development as well as lower predicted economic growth. These findings provide some empirical evidence for the dependency theory. By linking the idea of the dependency theory to more recent works on neoliberalism such as @harvey2019 and @slobodian2018 , I argue that these extractive powers no longer come from the economically stronger western states themselves but are increasingly exercised by from companies that exist within these developed countries. ISDS serve as the institutional infrastructure through which these corporations can enforce their economic interests against sovereign states
 
-If this theory holds, we would expect ISDS to be used disproportionately by investors from high-income states against developing country respondents. This paper tests this hypothesis empirically using data from the International Center for Settlement of Investment Disputes (ICSID), the world's leading institution for investor-state arbitration.
+If this theory holds, I would expect ISDS to be used disproportionately by investors from high-income states against developing country respondents. This paper tests this hypothesis empirically using data from the International Center for Settlement of Investment Disputes (ICSID).
 
 # Method
 
@@ -149,13 +148,13 @@ First, a additional data frame, that contained the iso3c and the income classifi
 # Analysis
 
 As described above, to analyze the data I use the ISCID cases combined with a categorization of the income group by the world bank.\
-In the first step, the overall distribution of ICSID cases across claimant and respondent income groups is examined. In the second step, the analysis is narrowed to extractive sectors specifically, where the dependency theory argument is theoretically most plausible.
+In the first step, the overall distribution of ICSID cases across claimant and respondent income groups is examined. In the second step, the analysis is narrowed to extractive sectors, where the dependency theory argument is theoretically most plausible.
 
-To test whether dispute patterns deviate from what would be expected by chance, a chi-square test of independence is used. The chi-square test is appropriate because both the claimant and respondent income group are categorical variables and the hypothesis concerns whether their joint distribution is random or systematic. However, a significant chi-square result only tells us that an association exists but it does not tell where in the table that association comes from. To address this, I use standardized residuals. A standardised residual greater than +2 indicates that a combination occurs significantly more often than expected, while a value below -2 indicates significant underrepresentation. This allows for a more precise and interpretable assessment of which specific income group combinations drive the overall pattern.
+To test whether dispute patterns deviate from what would be expected if they would be used at random and not in any pattern, a chi-square test of independence is used. The chi-square test is appropriate because both the claimant and respondent income group are categorical variables and the hypothesis tests whether the distribution is random or follows a pattern. However, a significant chi-square result only tells us that an association exists but it does not tell where in the table that association comes from. To address this, I use standardized residuals. A standardized residual greater than +2 indicates that a combination occurs significantly more often than expected, while a value below -2 indicates significant under-representation.
 
 In a second step I classify the different sectors into extractive sectors and non-extractive sectors with the first containing sectors such as oil, water, agriculture and forestry because these sectors are characterized by the exploitation of natural resources that are geographically fixed making them particularly prone to disputes between foreign investors and host states. The latter group contains disputes regarding the financial sector, information and communication sector and the energy sector.By isolating extractive cases, it is possible to test a more refined version of the dependency theory hypothesis: even if high-income claimants do not disproportionately target poorer states overall, they may do so specifically in sectors where natural resource extraction is at stake. The chi-square test and standardized residuals are applied to this subset in the same way as in the first step.
 
-To complement the cross-sectional analysis of income group patterns, the temporal development of ICSID cases is examined over time. Cases are categorised into three dispute patterns based on the income group of the claimant and respondent: high-income claimants versus developing respondents (low, lower middle, and upper middle income), high-income claimants versus high-income respondents, and all other combinations. A total case count is included as a reference. To smooth out year-to-year variation and make long-run trends more visible, LOESS regression lines are fitted to each pattern alongside the raw data.
+To add to the analysis of the income groups, I also examine how the use of ICSIDs have developed over tiem. The cases are categorized into three dispute patterns that are based on the income group of the claimant and respondent. I grouped high-income claimants versus developing respondents (low, lower middle, and upper middle income), high-income claimants against high-income respondents, and all other combinations. A total case count is included as a reference. To smooth out year-to-year variation and make long-run trends more visible, LOESS regression lines are fitted to each pattern alongside the raw data. The LOESS-regression functions similar to a normal regression but it allows for non-linearity as well.
 
 # Results
 
@@ -175,7 +174,7 @@ p_cases_map
 
 ## Claimant vs. Respondent by Income Group
 
-So the next step to investigate the hypothesis and to quantify these result was to check if there is a correlation between the number of cases the different income groups were suing each other. As mentioned above, to do so, I used the income classification for each country from the world bank. Not included in this report, there is a plot, which shows the income classification for each country.
+So the next step, to investigate the hypothesis and to quantify these result, was to check if there is a correlation between the number of cases the different income groups that were suing each other. As mentioned above, to do so, I used the income classification for each country from the world bank. Not included in this report, there is a plot, which shows the income classification for each country.
 
 I used a chi-squared test to see if there is any correlation. With a p-value of 2.2e-16 the test shows that there is a significant correlation between the income group of the claimant and the income group of the respondent. This means that there is a pattern and that it is not random whom sues who. In @fig-heatmap-income these patterns are made visible.
 
@@ -189,14 +188,13 @@ I used a chi-squared test to see if there is any correlation. With a p-value of 
 p_heatmap
 ```
 
-Several insights can be gained from this plot. First of all, when looking at the number of cases, one can see that the ICSD is a tool that mainly high- and upper middle income countries use. This makes sense because these are the countries that host the majority of multinational corporations with the financial resources that are required to pursue international arbitration, since it is a costly and complex process. Lower-income countries simply lack the institutional capacity and financial means to initiate such proceedings.
+When looking at the number of cases, one can see that the ICSD is a tool that mainly high- and upper middle income countries use. This makes sense because these are the countries that host the majority of multinational corporations with the financial resources that are required to pursue international arbitration. Moreover, a international dispute settlement is a expensive process, so companies seated in lower-income countries just cannot afford these proceedings.
 
-Second, when looking at the standardized residuals from the chi-square test we find that disputes among claimants and respondents of equal income class are over-represented while high-income claimants suing lower-income respondents is either neutral or negative across all cells, suggesting no disproportionate targeting of poorer states by wealthier investors.\
-While these findings suggest that in general, high-income claimants don't disproportionately sue poorer states overall*,* this still might be the case when looking at specific sectors.
+Second, when looking at the standardized residuals from the chi-square test we find that disputes among claimants and respondents of the same income class are over-represented while high-income claimants suing lower-income respondents are either neutral or negative. This suggests that the expected pattern of wealthy states suing developing states cannot be found.
 
 ## Claimant vs. Respondent by Income for Extractive Sectors
 
-@fig-heatmap-sector shows that, compared to the @fig-heatmap-income, in extracive sectors high income claimants do disproportionately sue upper middle income countries. One caveat of this analyis that has to be mentioned, is, that the sample size is getting smaller and therefor statistical power decreases.
+@fig-heatmap-sector shows that, compared to the @fig-heatmap-income, in extracitve sectors high income claimants do disproportionately sue upper middle income countries. One caveat of this analysis that has to be mentioned, is, that the sample size is getting smaller and therefor statistical power decreases.
 
 ```{r}
 #| label: fig-heatmap-sector
@@ -208,7 +206,7 @@ p_sector_heatmap
 
 ```
 
-This means that in the the extractive sector we find partial support for the argument that ICSID cases are a tool used by multinational corporations located in wealthy countries to protect the interests of their investors in resource-rich emerging economies. However, the effect is concentrated against upper-middle-income states not the poorest countries. This suggests that investment arbitration in the extractive sector functions less as a mechanism of exploitation in the classical sense, and more as a tool for wealthy investors to challenge state sovereignty over natural resources, which does follow the argument that ISDS cases are more used in a neoliberal framework than the arguments of classical dependency theory.
+The heatmap shows that in the extractive sector we find partial support for the argument that ICSID cases are a tool used by multinational corporations. However, the effect is concentrated against upper-middle-income states not the poorest countries. This suggests that investment arbitration in the extractive sector functions less as a mechanism of exploitation in the classical sense, and more as a tool for wealthy investors to challenge state sovereignty over natural resources.
 
 ## Time Trend
 
@@ -223,14 +221,11 @@ p_trend_pattern
 
 ```
 
-The dominant pattern throughout the entire period is high-income claimants suing developing respondents, which consistently accounts for the largest share of cases. However, high-income versus high-income disputes have grown notably since the 2000s. Disputes where the claimant is not from a high-income country remain low throughout the entire period. This is consistent with the earlier finding that lower-income claimants rarely use ICSID arbitration. This further supports the interpretation that access to investment arbitration is structurally skewed towards wealthier investors.
-
-Overall, It is also notable that the numbers of cases per year have been increasing since the 1990s.
+The dominant pattern throughout the entire period is that high-income claimants are suing mostly developing respondents. However, high-income against high-income disputes have grown since 2000. Disputes where the claimant is not from a high-income country remain low throughout the entire period. This is consistent with the earlier finding that lower-income claimants rarely use ICSID arbitration. Overall, It is also notable that the numbers of cases per year have been increasing since the 1990s.
 
 # Conclusion
 
-While the findings of the analysis that included all sectors did not clearly support the hypothesis of this paper, when only looking at the extractive sector there were notable patterns that do provide partial empirical support for the dependency theory argument. Specifically, high-income claimants disproportionately sue upper-middle-income respondents in extractive sectors. However, the findings also complicate the center periphery exploitation narrative. The dominant statistical finding across all sectors is within-group disputes so countries tend to be sued by investors from similar income groups.
-
+While the findings of the analysis that included all sectors did not clearly support the hypothesis of this paper, when only looking at the extractive sector the paper finds patterns that do provide partial empirical support for the dependency theory argument. Specifically, high-income claimants disproportionately sue upper-middle-income respondents in extractive sectors. The dominant statistical finding across all sectors is that investors tend to be sued investors from similar income groups.\
 The effect, where it exists, is concentrated against upper-middle-income states such as Argentina, Venezuela, and Ecuador, rather than the least developed countries.
 
 Several limitations of this analysis should be acknowledged. First, the data is limited to ICSID cases only and does not capture disputes filed under other arbitration forums such as UNCITRAL, ICC, or the Stockholm Chamber of Commerce, which may exhibit different patterns. Second, the income classifications used are based on current World Bank data and may not accurately reflect the economic status of countries at the time the disputes were filed. Future research could address these limitations by expanding the dataset to include other arbitration forums and by incorporating time-varying income classifications to better capture the economic context at the time of each dispute.
@@ -273,3 +268,15 @@ In the process of creating this paper the LLM model Claude (Sonnet 4.6) was used
 # Declaration of Originality
 
 “I hereby declare that I have written this thesis independently and have not used any sources other than those indicated. I have marked as such all passages taken verbatim or in spirit from sources."
+
+```{=latex}
+\vspace{2cm}
+
+\noindent
+\begin{tabular}{p{6cm} p{2cm} p{6cm}}
+\noindent\rule{6cm}{0.4pt} & & \noindent\rule{6cm}{0.4pt} \\[0.8pt]
+{\small Place and Date} & & {\small Signature} \\
+\end{tabular}
+
+\vspace{1cm}
+```
