@@ -10,7 +10,7 @@ format:
   pdf:
     pdf-engine: lualatex
     template: template_full.tex
-    keep-tex: true
+    keep-tex: false
     toc: true
     fig-width: 6.3
 

@@ -5,3 +5,6 @@
 .DS_Store
 data_raw
 data_preprocessed
+template_full.tex
+apsa.csl
+References.bib
