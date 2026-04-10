@@ -231,7 +231,8 @@ The effect, where it exists, is concentrated against upper-middle-income states 
 Several limitations of this analysis should be acknowledged. First, the data is limited to ICSID cases only and does not capture disputes filed under other arbitration forums such as UNCITRAL, ICC, or the Stockholm Chamber of Commerce, which may exhibit different patterns. Second, the income classifications used are based on current World Bank data and may not accurately reflect the economic status of countries at the time the disputes were filed. Future research could address these limitations by expanding the dataset to include other arbitration forums and by incorporating time-varying income classifications to better capture the economic context at the time of each dispute.
 
 Important note: Non of the data was pushed to Github. The datasets were excluded by putting the data folders (`data_raw` and `data_preprocessed` into the .gitignore\
-Additional note: I also did not push my Latex-Template File because it contains personal information which I do not want to be visible to everybody. Moreover I did not push the References.bib and the apsa.csl, the latter because it is not my work and I don't know if I would even be allowed to that and the first one because it is updated automatically by zotero, so if I add literature, even if I don't use it in that report, would need a new commit.)
+Additional note: I also did not push my Latex-Template File because it contains personal information which I do not want to be visible to everybody. Moreover I did not push the References.bib and the apsa.csl, the latter because it is not my work and I don't know if I would even be allowed to that and the first one because it is updated automatically by zotero, so if I add literature, even if I don't use it in that report, would need a new commit.\
+Also, in order to sign the Declaration of Originality, I edited the PDF with Adobe after it was rendered.
 
 \newpage
 
